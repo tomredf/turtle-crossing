@@ -10,19 +10,27 @@ screen.title("Turtle Crossing")
 screen.tracer(0)
 
 player = Player()
-cars = CarManager
-scoreboard = Scoreboard
+cars = CarManager()
+scoreboard = Scoreboard()
 
+screen.listen()
+screen.onkey(player.move_up, "Up")
 
 game_is_on = True
 while game_is_on:
     time.sleep(0.1)
     screen.update()
+    cars.add_car()
+    cars.move_cars()
 
+    for car in cars.cars:
+        if car.distance(player) < 20:
+            game_is_on = False
+            scoreboard.game_over()
 
-screen.onkey(player.move_left, "left")
-screen.onkey(player.move_right, "right")
-screen.onkey(player.move_up, "up")
-screen.onkey(player.move_down, "down")
+    if player.made_it():
+        player.go_to_start()
+        cars.level_up()
+        scoreboard.update_level()
 
 screen.exitonclick()
